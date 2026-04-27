@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Casa Inteligente</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>🏠 Casa Inteligente</h1>
+
+<h2>Temperatura: {{ temperatura }}°C</h2>
+
+<div class="container">
+
+    <!-- Luz -->
+    <div class="card">
+        <h3>💡 Luz</h3>
+        <button class="btn {{ 'on' if luz.status() == 'Ligado' else 'off' }}"
+            onclick="window.location.href='{{ '/desligar/luz' if luz.status() == 'Ligado' else '/ligar/luz' }}'">
+
+            {{ luz.status() }}
+            <span class="led"></span>
+        </button>
+    </div>
+
+    <!-- Ventilador -->
+    <div class="card">
+        <h3>🌀 Ventilador</h3>
+        <button class="btn {{ 'on' if ventilador.status() == 'Ligado' else 'off' }}"
+            onclick="window.location.href='{{ '/desligar/ventilador' if ventilador.status() == 'Ligado' else '/ligar/ventilador' }}'">
+
+            {{ ventilador.status() }}
+            <span class="led"></span>
+        </button>
+    </div>
+
+    <!-- Porta -->
+    <div class="card">
+        <h3>🚪 Porta</h3>
+        <button class="btn {{ 'on' if porta.status() == 'Aberta' else 'off' }}"
+            onclick="window.location.href='{{ '/desligar/porta' if porta.status() == 'Aberta' else '/ligar/porta' }}'">
+
+            {{ porta.status() }}
+            <span class="led"></span>
+        </button>
+    </div>
+
+</div>
+
+</body>
+</html>
