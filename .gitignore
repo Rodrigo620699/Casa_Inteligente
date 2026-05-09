@@ -1,0 +1,18 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+.env.*
+
+# Editor/project files
+.vscode/
+.idea/
+.DS_Store
+
+# AI assistant and temporary files
+.claude/

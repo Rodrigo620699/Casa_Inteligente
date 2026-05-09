@@ -1,51 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
-    <title>Casa Inteligente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Inteligente Moderna</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
+    <div class="container">
+        <header>
+            <h1>🏠 Casa Inteligente</h1>
+            <div class="temperatura">
+                <div class="temp-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
+                </div>
+                <span id="temp-value">{{ temperatura }}</span>°C
+                <button id="update-temp" class="btn-update">Atualizar</button>
+            </div>
+        </header>
 
-<h1>🏠 Casa Inteligente</h1>
+        <main class="devices">
+            <!-- Luz -->
+            <div class="device-card">
+                <div class="device-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l-1 7H5l5 4v7h4v-7l5-4h-6l-1-7z" />
+                    </svg>
+                </div>
+                <h3>Luz da Sala</h3>
+                <button class="btn-toggle {{ 'active' if luz.status() == 'Ligado' else '' }}" data-device="luz">
+                    {{ luz.status() }}
+                </button>
+            </div>
 
-<h2>Temperatura: {{ temperatura }}°C</h2>
+            <!-- Ventilador -->
+            <div class="device-card">
+                <div class="device-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                    </svg>
+                </div>
+                <h3>Ventilador</h3>
+                <p class="automation">Automação: Liga se >28°C</p>
+                <button class="btn-toggle {{ 'active' if ventilador.status() == 'Ligado' else '' }}"
+                    data-device="ventilador">
+                    {{ ventilador.status() }}
+                </button>
+            </div>
 
-<div class="container">
-
-    <!-- Luz -->
-    <div class="card">
-        <h3>💡 Luz</h3>
-        <button class="btn {{ 'on' if luz.status() == 'Ligado' else 'off' }}"
-            onclick="window.location.href='{{ '/desligar/luz' if luz.status() == 'Ligado' else '/ligar/luz' }}'">
-
-            {{ luz.status() }}
-            <span class="led"></span>
-        </button>
+            <!-- Porta -->
+            <div class="device-card">
+                <div class="device-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 21h18V3H3v18zM5 5h14v14H5V5zm4 8h6v2H9v-2z" />
+                    </svg>
+                </div>
+                <h3>Porta de Entrada</h3>
+                <button class="btn-toggle {{ 'active' if porta.status() == 'Aberta' else '' }}" data-device="porta">
+                    {{ porta.status() }}
+                </button>
+            </div>
+        </main>
     </div>
 
-    <!-- Ventilador -->
-    <div class="card">
-        <h3>🌀 Ventilador</h3>
-        <button class="btn {{ 'on' if ventilador.status() == 'Ligado' else 'off' }}"
-            onclick="window.location.href='{{ '/desligar/ventilador' if ventilador.status() == 'Ligado' else '/ligar/ventilador' }}'">
+    <script>
+        // Função para atualizar status
+        async function updateStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                document.getElementById('temp-value').textContent = data.temperatura;
 
-            {{ ventilador.status() }}
-            <span class="led"></span>
-        </button>
-    </div>
+                // Atualizar botões
+                document.querySelector('[data-device="luz"]').textContent = data.luz;
+                document.querySelector('[data-device="luz"]').classList.toggle('active', data.luz === 'Ligado');
 
-    <!-- Porta -->
-    <div class="card">
-        <h3>🚪 Porta</h3>
-        <button class="btn {{ 'on' if porta.status() == 'Aberta' else 'off' }}"
-            onclick="window.location.href='{{ '/desligar/porta' if porta.status() == 'Aberta' else '/ligar/porta' }}'">
+                document.querySelector('[data-device="ventilador"]').textContent = data.ventilador;
+                document.querySelector('[data-device="ventilador"]').classList.toggle('active', data.ventilador === 'Ligado');
 
-            {{ porta.status() }}
-            <span class="led"></span>
-        </button>
-    </div>
+                document.querySelector('[data-device="porta"]').textContent = data.porta;
+                document.querySelector('[data-device="porta"]').classList.toggle('active', data.porta === 'Aberta');
+            } catch (error) {
+                console.error('Erro ao atualizar status:', error);
+            }
+        }
 
-</div>
+        // Event listeners
+        document.getElementById('update-temp').addEventListener('click', updateStatus);
 
+        document.querySelectorAll('.btn-toggle').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const device = btn.dataset.device;
+                const isActive = btn.classList.contains('active');
+                const action = isActive ? 'desligar' : 'ligar';
+
+                try {
+                    await fetch(`/${action}/${device}`);
+                    updateStatus();
+                } catch (error) {
+                    console.error('Erro ao controlar dispositivo:', error);
+                }
+            });
+        });
+
+        // Atualizar automaticamente a cada 5 segundos
+        setInterval(updateStatus, 5000);
+    </script>
 </body>
+
+</html>
+
 </html>

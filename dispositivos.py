@@ -23,6 +23,18 @@ class Ventilador(Dispositivo):
     pass
 
 class Porta(Dispositivo):
+    def ligar(self):
+        self.estado = True  # Aberta
+
+    def desligar(self):
+        self.estado = False  # Fechada
+
+    def abrir(self):
+        self.ligar()
+
+    def fechar(self):
+        self.desligar()
+
     def status(self):
         return "Aberta" if self.estado else "Fechada"
     
