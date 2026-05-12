@@ -4,116 +4,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Inteligente Moderna</title>
+    <title>Casa Inteligente</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
+
     <div class="container">
-        <header>
-            <h1>🏠 Casa Inteligente</h1>
-            <div class="temperatura">
-                <div class="temp-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                    </svg>
-                </div>
-                <span id="temp-value">{{ temperatura }}</span>°C
-                <button id="update-temp" class="btn-update">Atualizar</button>
+
+        <header class="header">
+            <div class="header-eyebrow">
+                Sistema Domótico
             </div>
+
+            <h1>Casa Inteligente</h1>
         </header>
 
-        <main class="devices">
-            <!-- Luz -->
-            <div class="device-card">
-                <div class="device-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l-1 7H5l5 4v7h4v-7l5-4h-6l-1-7z" />
-                    </svg>
+        <div class="cards">
+
+            <!-- TEMPERATURA -->
+            <div class="card card-temp">
+
+                <div class="card-top">
+
+                    <div class="card-title">
+                        <div class="card-icon">🌡</div>
+                        <h2>Temperatura</h2>
+                    </div>
+
+                    <span class="badge on">
+                        <span class="badge-dot"></span>
+                        Ao Vivo
+                    </span>
+
                 </div>
-                <h3>Luz da Sala</h3>
-                <button class="btn-toggle {{ 'active' if luz.status() == 'Ligado' else '' }}" data-device="luz">
-                    {{ luz.status() }}
-                </button>
+
+                <div class="temp-value">
+                    <span id="temp">
+                        {{ status.temperatura }}
+                    </span>
+
+                    <sup>°C</sup>
+                </div>
+
+                <div class="temp-bar-wrap">
+                    <div class="temp-bar" id="temp-bar"></div>
+                </div>
+
             </div>
 
-            <!-- Ventilador -->
-            <div class="device-card">
-                <div class="device-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-                    </svg>
+            <!-- LUZ -->
+            <div class="card">
+
+                <div class="card-top">
+
+                    <div class="card-title">
+                        <div class="card-icon">💡</div>
+                        <h2>Luz</h2>
+                    </div>
+
+                    <span class="badge off" id="luz-badge">
+
+                        <span class="badge-dot"></span>
+
+                        <span id="luz-status">
+                            {{ status.luz }}
+                        </span>
+
+                    </span>
+
                 </div>
-                <h3>Ventilador</h3>
-                <p class="automation">Automação: Liga se >28°C</p>
-                <button class="btn-toggle {{ 'active' if ventilador.status() == 'Ligado' else '' }}"
-                    data-device="ventilador">
-                    {{ ventilador.status() }}
-                </button>
+
+                <div class="card-divider"></div>
+
+                <div class="btn-row">
+
+                    <button class="btn-primary" onclick="controlar('ligar','luz')">
+
+                        Ligar
+
+                    </button>
+
+                    <button class="btn-secondary" onclick="controlar('desligar','luz')">
+
+                        Desligar
+
+                    </button>
+
+                </div>
+
             </div>
 
-            <!-- Porta -->
-            <div class="device-card">
-                <div class="device-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 21h18V3H3v18zM5 5h14v14H5V5zm4 8h6v2H9v-2z" />
-                    </svg>
+            <!-- VENTILADOR -->
+            <div class="card">
+
+                <div class="card-top">
+
+                    <div class="card-title">
+                        <div class="card-icon">🌀</div>
+                        <h2>Ventilador</h2>
+                    </div>
+
+                    <span class="badge off" id="vent-badge">
+
+                        <span class="badge-dot"></span>
+
+                        <span id="vent-status">
+                            {{ status.ventilador }}
+                        </span>
+
+                    </span>
+
                 </div>
-                <h3>Porta de Entrada</h3>
-                <button class="btn-toggle {{ 'active' if porta.status() == 'Aberta' else '' }}" data-device="porta">
-                    {{ porta.status() }}
-                </button>
+
+                <div class="card-divider"></div>
+
+                <div class="fan-indicator normal-temp" id="vent-indicador">
+
+                    <span class="fan-spin">🌀</span>
+
+                    {% if status.ventilador == "ligado" %}
+                    Temperatura Alta
+                    {% else %}
+                    Temperatura Normal
+                    {% endif %}
+
+                </div>
+
             </div>
-        </main>
+
+            <!-- PORTA -->
+            <div class="card porta-card">
+
+                <div class="card-top">
+
+                    <div class="card-title">
+                        <div class="card-icon">🚪</div>
+                        <h2>Porta</h2>
+                    </div>
+
+                    <span class="badge off" id="porta-badge">
+
+                        <span class="badge-dot"></span>
+
+                        <span id="porta-status">
+                            {{ status.porta }}
+                        </span>
+
+                    </span>
+
+                </div>
+
+                <div class="card-divider"></div>
+
+                <div class="btn-row">
+
+                    <button class="btn-primary" onclick="controlar('ligar','porta')">
+
+                        Abrir
+
+                    </button>
+
+                    <button class="btn-secondary" onclick="controlar('desligar','porta')">
+
+                        Fechar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Atualização automática a cada 3 segundos
+        </div>
+
     </div>
 
     <script>
-        // Função para atualizar status
-        async function updateStatus() {
+
+        function setBadge(badgeEl, status) {
+
+            const active =
+                status === 'ligado' ||
+                status === 'aberta';
+
+            badgeEl.className =
+                'badge ' +
+                (active ? 'on' : 'off');
+        }
+
+        function setTempBar(temp) {
+
+            const pct =
+                Math.min(
+                    Math.max(
+                        (temp / 50) * 100,
+                        4
+                    ),
+                    100
+                );
+
+            document.getElementById(
+                'temp-bar'
+            ).style.width =
+                pct + '%';
+        }
+
+        async function controlar(
+            acao,
+            dispositivo
+        ) {
+
             try {
-                const response = await fetch('/api/status');
-                const data = await response.json();
-                document.getElementById('temp-value').textContent = data.temperatura;
 
-                // Atualizar botões
-                document.querySelector('[data-device="luz"]').textContent = data.luz;
-                document.querySelector('[data-device="luz"]').classList.toggle('active', data.luz === 'Ligado');
+                await fetch(
+                    `/${acao}/${dispositivo}`
+                );
 
-                document.querySelector('[data-device="ventilador"]').textContent = data.ventilador;
-                document.querySelector('[data-device="ventilador"]').classList.toggle('active', data.ventilador === 'Ligado');
+                atualizar();
 
-                document.querySelector('[data-device="porta"]').textContent = data.porta;
-                document.querySelector('[data-device="porta"]').classList.toggle('active', data.porta === 'Aberta');
-            } catch (error) {
-                console.error('Erro ao atualizar status:', error);
+            } catch (erro) {
+
+                console.log(
+                    "Erro:",
+                    erro
+                );
+
             }
         }
 
-        // Event listeners
-        document.getElementById('update-temp').addEventListener('click', updateStatus);
+        async function atualizar() {
 
-        document.querySelectorAll('.btn-toggle').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const device = btn.dataset.device;
-                const isActive = btn.classList.contains('active');
-                const action = isActive ? 'desligar' : 'ligar';
+            try {
 
-                try {
-                    await fetch(`/${action}/${device}`);
-                    updateStatus();
-                } catch (error) {
-                    console.error('Erro ao controlar dispositivo:', error);
+                const response =
+                    await fetch('/api/status');
+
+                const data =
+                    await response.json();
+
+                // TEMPERATURA
+                document.getElementById(
+                    'temp'
+                ).innerText =
+                    data.temperatura;
+
+                setTempBar(
+                    data.temperatura
+                );
+
+                // LUZ
+                document.getElementById(
+                    'luz-status'
+                ).innerText =
+                    data.luz;
+
+                setBadge(
+                    document.getElementById(
+                        'luz-badge'
+                    ),
+                    data.luz
+                );
+
+                // VENTILADOR
+                document.getElementById(
+                    'vent-status'
+                ).innerText =
+                    data.ventilador;
+
+                setBadge(
+                    document.getElementById(
+                        'vent-badge'
+                    ),
+                    data.ventilador
+                );
+
+                const indicador =
+                    document.getElementById(
+                        'vent-indicador'
+                    );
+
+                if (
+                    data.ventilador === 'ligado'
+                ) {
+
+                    indicador.className =
+                        'fan-indicator high-temp';
+
+                    indicador.innerHTML =
+                        '<span class="fan-spin">🌀</span> Temperatura Alta';
+
+                } else {
+
+                    indicador.className =
+                        'fan-indicator normal-temp';
+
+                    indicador.innerHTML =
+                        '<span class="fan-spin">🌀</span> Temperatura Normal';
                 }
-            });
-        });
 
-        // Atualizar automaticamente a cada 5 segundos
-        setInterval(updateStatus, 5000);
+                // PORTA
+                document.getElementById(
+                    'porta-status'
+                ).innerText =
+                    data.porta;
+
+                setBadge(
+                    document.getElementById(
+                        'porta-badge'
+                    ),
+                    data.porta
+                );
+
+            } catch (erro) {
+
+                console.log(
+                    "Erro update:",
+                    erro
+                );
+
+            }
+        }
+
+        setTempBar(
+            parseFloat(
+                document.getElementById(
+                    'temp'
+                ).innerText
+            ) || 0
+        );
+
+        setInterval(
+            atualizar,
+            3000
+        );
+
     </script>
-</body>
 
-</html>
+</body>
 
 </html>
