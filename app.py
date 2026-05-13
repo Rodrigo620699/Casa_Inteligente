@@ -17,7 +17,7 @@ MQTT_CLIENT_ID = "flask_casa"
 # ==========================================
 
 status_atual = {
-    "luz": "desligada",
+    "luz": "desligado",
     "porta": "fechada",
     "ventilador": "desligado",
     "temperatura": 25
@@ -61,7 +61,7 @@ def on_message(client, userdata, msg):
 
                 dados = json.loads(payload)
 
-                status_atual["luz"] = dados.get("luz", "desligada")
+                status_atual["luz"] = dados.get("luz", "desligado")
                 status_atual["porta"] = dados.get("porta", "fechada")
                 status_atual["ventilador"] = dados.get("ventilador", "desligado")
                 status_atual["temperatura"] = dados.get("temperatura", 25)
