@@ -53,3 +53,9 @@ Este projeto integra uma interface web Flask com um ESP32 para controle de dispo
 - `casa/ventilador`: "ligar"/"desligar"
 - `casa/temperatura`: valor float
 - `casa/status`: JSON com status
+
+- ## URL Casa-Inteligente:
+
+- https://casa-inteligente-app.onrender.com
+
+
